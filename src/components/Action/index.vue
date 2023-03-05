@@ -53,6 +53,10 @@
           time: new Date(),
           id: new Date().getTime(),
         })
+        title.value = ""
+        description.value = ""
+        amount.value = 0
+        movementType.value = "Ingreso"
     }
 </script>
 

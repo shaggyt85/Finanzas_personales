@@ -5,9 +5,9 @@
         </template>
         <template #resume>
             <Resume 
-            :label="label" :amount="amount" :totalAmount="100000" >
+            :label="label" :amount="amount" :totalAmount="totalAmount" >
                 <template #graphic>
-                    <Graphic :amounts="amounts"/>
+                    <Graphic :amounts="amounts" @select="select" />
                 </template>
                 <template #action>
                     <Action @create="create" /> 
@@ -41,41 +41,7 @@
                 amount: null,
                 label: null,
                 // amounts: [100, 200, 500, 200, -600, 2400, -1000, 500],
-                movements: [{
-                    id: 1,
-                    title: "Movimiento Uno",
-                    description: "Lorem Impsum and gerty hytui",
-                    amount: 110,
-                    time: new Date("04-03-2023")
-                },
-                {
-                    id: 2,
-                    title: "Movimiento dos",
-                    description: "Lorem Impsum and gerty hytui",
-                    amount: - 100,
-                    time: new Date("04-03-2023")
-                },
-                {
-                    id: 3,
-                    title: "Movimiento tres",
-                    description: "Lorem Impsum and gerty hytui",
-                    amount: -510,
-                    time: new Date("04-03-2023")
-                },
-                {
-                    id: 4,
-                    title: "Movimiento cuatro",
-                    description: "Lorem Impsum and gerty hytui",
-                    amount: 1010,
-                    time: new Date("04-03-2023")
-                },
-                {
-                    id: 5,
-                    title: "Movimiento cinco",
-                    description: "Lorem Impsum and gerty hytui",
-                    amount: 1010,
-                    time: new Date("04-03-2023")
-                },]
+                movements: [],
             }
         },
         computed: {
@@ -91,14 +57,36 @@
       return acc.length ? [...acc, acc[acc.length - 1] + amount] : [amount];
     }, []);
 },
+totalAmount() {
+    return this.movements.reduce((suma, m) => {
+        return suma + m.amount
+    }, 0)
+}
+        },
+        mounted() {
+            const movements = JSON.parse(localStorage.getItem("movements"))
+            if(Array.isArray(movements)){
+                this.movements = movements?.map(m => {
+                    return {...m, time: new Date(m.time)}
+                })
+                }
         },
         methods: {
             create(movement) {
                 this.movements.push(movement)
+                this.save()
             },
             remove(id) {
                 const index = this.movements.findIndex(m => m.id === id)
                 this.movements.splice(index, 1)
+                this.save()
+            },
+            save() {
+                localStorage.setItem("movements", JSON.stringify(this.movements))
+            },
+            select(el) {
+                console.log(el)
+                this.amount = el
             }
         }
     }
