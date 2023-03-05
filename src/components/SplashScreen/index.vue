@@ -16,7 +16,4 @@
     h1{
         color: var(--brand-blue);
     }
-    h1 span {
-        color: var(--brand-green);
-    }
 </style>

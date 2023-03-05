@@ -37,4 +37,7 @@
         --brand-green: #04b500;
         --brand-blue: #0689b0;
     }
+    h1 span {
+        color: var(--brand-green);
+    }
 </style>
