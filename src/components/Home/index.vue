@@ -10,12 +10,12 @@
                     <Graphic :amounts="amounts"/>
                 </template>
                 <template #action>
-                    <Action /> 
+                    <Action @create="create" /> 
                 </template>
             </Resume>
         </template>
         <template #movements>
-            <Movements :movements="movements" />
+            <Movements :movements="movements" @remove="remove"/>
         </template>
     </Layout>
 </template>
@@ -40,19 +40,65 @@
             return {
                 amount: null,
                 label: null,
-                amounts: [100, 200, 500, 200, -600, 2400, -1000, 500],
+                // amounts: [100, 200, 500, 200, -600, 2400, -1000, 500],
                 movements: [{
                     id: 1,
                     title: "Movimiento Uno",
-                    description: "oremsjjahdjhas",
+                    description: "Lorem Impsum and gerty hytui",
                     amount: 110,
+                    time: new Date("04-03-2023")
                 },
                 {
                     id: 2,
                     title: "Movimiento dos",
-                    description: "oremsjjahdjhas",
+                    description: "Lorem Impsum and gerty hytui",
                     amount: - 100,
-                }]
+                    time: new Date("04-03-2023")
+                },
+                {
+                    id: 3,
+                    title: "Movimiento tres",
+                    description: "Lorem Impsum and gerty hytui",
+                    amount: -510,
+                    time: new Date("04-03-2023")
+                },
+                {
+                    id: 4,
+                    title: "Movimiento cuatro",
+                    description: "Lorem Impsum and gerty hytui",
+                    amount: 1010,
+                    time: new Date("04-03-2023")
+                },
+                {
+                    id: 5,
+                    title: "Movimiento cinco",
+                    description: "Lorem Impsum and gerty hytui",
+                    amount: 1010,
+                    time: new Date("04-03-2023")
+                },]
+            }
+        },
+        computed: {
+            amounts() {
+  return this.movements
+    .filter(({ time }) => {
+      const today = new Date();
+      const oldDate = today.setDate(today.getDate() - 30);
+
+      return time > oldDate;
+    })
+    .reduce((acc, { amount }) => {
+      return acc.length ? [...acc, acc[acc.length - 1] + amount] : [amount];
+    }, []);
+},
+        },
+        methods: {
+            create(movement) {
+                this.movements.push(movement)
+            },
+            remove(id) {
+                const index = this.movements.findIndex(m => m.id === id)
+                this.movements.splice(index, 1)
             }
         }
     }
